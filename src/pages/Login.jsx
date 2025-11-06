@@ -1,66 +1,55 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 
-
-export default function Login({ onLogin }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
 
-
   const submit = async (e) => {
     e.preventDefault();
 
-    const res = onLogin({ email, password, role: "farmer" });
+    // Check if user exists in farmerinfo
+    const { data, error } = await supabase
+      .from("farmerinfo")
+      .select("*")
+      .eq("email", email)
+      .eq("password", password)
+      .single();
 
-    console.log("Login response:", res);
-
-    if (res.ok) {
-      alert("Login successful!");
-      const role = res.user?.role?.toLowerCase();
-
-      console.log("Detected role:", role);
-
-      if (role === "farmer") {
-        nav("/Dashboard");
-      } else if (role === "customer") {
-        nav("/Dashboard");
-      } else {
-        nav("/");
-      }
-    } else {
-      alert(res.message || "Invalid credentials");
+    if (error || !data) {
+      alert("Invalid credentials");
+      console.error(error);
+      return;
     }
+
+    alert("Login successful!");
+    nav("/Dashboard"); // redirect after successful login
   };
 
   return (
     <div className="container">
-      <h2>Login</h2>
+      <h2>Farmer Login</h2>
       <form onSubmit={submit}>
         <input
           required
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <input
           required
+          type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          type="password"
         />
-
         <div style={{ textAlign: "right", marginBottom: "10px" }}>
-          <Link to="/forgotfarm" style={{ color: "blue", textDecoration: "none" }}>
-            Forgot Password?
-          </Link>
+          <Link to="/forgotfarm">Forgot Password?</Link>
         </div>
-
-        <button className="btn" type="submit">
-          Login
-        </button>
+        <button className="btn" type="submit">Login</button>
       </form>
     </div>
   );

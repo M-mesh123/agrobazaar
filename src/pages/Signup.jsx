@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import Footer from "../pages/footer";
-import { Link } from "react-router-dom";
+import { supabase } from "../supabaseClient"; // ✅ ensure correct path
 
-
-export default function Signup({ onSignup }) {
+export default function Signup() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("customer"); // default
   const [profilePhoto, setProfilePhoto] = useState(null);
 
-    function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // basic validation
-    if (!name || !phone || !password || !confirmPassword || !address) {
-      alert("Please fill all required fields");
+    if (!name || !phone || !email || !password || !confirmPassword || !address) {
+      alert("Please fill all fields");
       return;
     }
 
@@ -27,109 +23,59 @@ export default function Signup({ onSignup }) {
       return;
     }
 
-    const signupData = {name, phone, email, address, password,role:"farmer",   profilePhoto, // file object
-    };
+    // Optional: Upload profile photo
+    let photoUrl = null;
+    if (profilePhoto) {
+      const { data, error } = await supabase.storage
+        .from("farmer-photos") // make sure the bucket exists in Supabase
+        .upload(`profiles/${Date.now()}_${profilePhoto.name}`, profilePhoto);
 
+      if (error) {
+        console.error("Photo upload failed:", error.message);
+      } else {
+        const { data: publicURL } = supabase.storage
+          .from("farmer-photos")
+          .getPublicUrl(data.path);
+        photoUrl = publicURL.publicUrl;
+      }
+    }
 
-    
+    // Insert into database
+    const { data, error } = await supabase
+      .from("farmerinfo")
+      .insert([
+        {
+          name,
+          phone,
+          email,
+          address,
+          password, // ⚠️ store securely or hash in production
+          role: "farmer",
+          profile_photo: photoUrl,
+        },
+      ]);
 
-    const res = onSignup(signupData);
-
-    if (res.ok) {
-      alert("Signup successful!");
+    if (error) {
+      alert(`Signup failed: ${error.message}`);
+      console.error(error);
     } else {
-      alert(res.message || "Signup failed");
+      alert("Signup successful!");
     }
-  }
-
-  // Handle photo upload
-  function handlePhotoChange(e) {
-    const file = e.target.files[0];
-    if (file) {
-      setProfilePhoto(file);
-    }
-  }
+  };
 
   return (
     <div className="container">
-      <h2>Signup</h2>
-      <form onSubmit={handleSubmit} className="signup-form">
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          pattern="[0-9]{10}"
-          maxLength="10"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-        />
-
-        <input
-          type="email"
-          placeholder="Email "
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <textarea
-          placeholder="Full Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-        />
-
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-        />
-
-        <div className="file-input">
-          <label htmlFor="photo">Upload Profile Photo:</label>
-          <input
-            id="photo"
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
-        </div>
-
+      <h2>Farmer Signup</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input type="tel" placeholder="Phone" maxlenght={10} value={phone} onChange={(e) => setPhone(e.target.value)} required />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <textarea placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+        <input type="file" accept="image/*" onChange={(e) => setProfilePhoto(e.target.files[0])} />
         <button type="submit" className="btn">Signup</button>
       </form>
-      <form onSubmit={handleSubmit} className="signup-form" autoComplete="off">
-        {/* form fields */}
-      </form>
-
-      <input type="text" name="fakeusernameremembered" style={{ display: "none" }} />
-      <input type="password" name="fakepasswordremembered" style={{ display: "none" }} />
-
-      
-
-
     </div>
-    
-    
   );
 }
