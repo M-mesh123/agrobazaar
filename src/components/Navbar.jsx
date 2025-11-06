@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logo from "E:/AgroBazaar/src/components/web.jpg";
+import logo from "./web.jpg";
 
 export default function Navbar({ user, onLogout, cartCount = 0 }) {
   const navigate = useNavigate();
