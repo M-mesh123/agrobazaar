@@ -1,0 +1,101 @@
+/* CustomerLogin.css */
+
+.customer-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #81ecec,rgb(7, 88, 7));
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-box {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 25px;
+  color: #2d3436;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #636e72;
+}
+
+.input-group input {
+  padding: 12px 15px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #0984e3;
+  box-shadow: 0 0 8px rgba(0, 149, 255, 0.2);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #0984e3;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background-color: #74b9ff;
+}
+
+.signup-link,
+.forgot-password {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup-link a,
+.forgot-password a {
+  color: #0984e3;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-link a:hover,
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 30px 20px;
+  }
+
+  .login-box h2 {
+    font-size: 22px;
+  }
+}
