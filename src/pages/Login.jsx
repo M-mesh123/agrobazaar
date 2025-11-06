@@ -24,8 +24,23 @@ export default function Login() {
       return;
     }
 
-    alert("Login successful!");
-    nav("/Dashboard"); // redirect after successful login
+    // Step 2: Call parent’s onLogin to update App.jsx state
+    const res = onLogin({
+      email: data.email,
+      password: data.password,
+      role: data.role || "farmer",
+      name: data.name,
+      phone: data.phone,
+    });
+
+    if (res.ok) {
+      alert("Login successful!");
+      nav("/Dashboard"); // ✅ now Dashboard will render
+    } else {
+      alert(res.message || "Login failed");
+    }
+    // alert("Login successful!");
+    // nav("/Dashboard"); // redirect after successful login
   };
 
   return (
