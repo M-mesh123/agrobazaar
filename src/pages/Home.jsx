@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo1 from "E:/AgroBazaar/src/pages/customer.jpg";
-import logo2 from "E:/AgroBazaar/src/pages/farmer.jpg";
+import logo1 from "./customer.jpg";
+import logo2 from "./farmer.jpg";
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
