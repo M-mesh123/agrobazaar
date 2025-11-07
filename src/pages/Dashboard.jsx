@@ -44,11 +44,18 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
 //   else console.log("Fetched crops:", data);
 // }
 
+  const isFarmer = user?.role === "farmer";
+  const isCustomer = user?.role === "customer";
 
   return (
     <div className="container">
       <div className="dashboard-header">
         <h2>Dashboard</h2>
+<h2>
+        {isFarmer
+            ? `Welcome, Farmer ${user?.name || ""}`
+            : `Welcome, ${user?.name || "Customer"} 👋`}
+        </h2>
       </div>
 
       {/* Crop Grid */}
@@ -98,6 +105,7 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
       </div>
 
       {/* Sidebar Cart */}
+      {isCustomer &&(
       <div className={`cart-sidebar ${isCartOpen ? "open" : ""}`}>
         <button className="close-btn" onClick={() => setIsCartOpen(false)}>
           ✖
@@ -139,6 +147,7 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
           </div>
         )}
       </div>
+      )}
 
       {/* SELL SIDEBAR (Farmer Only) */}
       {user?.role === "farmer" && (

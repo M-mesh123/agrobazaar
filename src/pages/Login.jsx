@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
-export default function Login() {
+export default function Login({onLogin}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
@@ -16,7 +16,11 @@ export default function Login() {
       .select("*")
       .eq("email", email)
       .eq("password", password)
-      .single();
+      .maybeSingle();
+
+      console.log("Login attempt:", { email, password });
+console.log("Supabase returned:", data);
+console.log("Supabase error:", error);
 
     if (error || !data) {
       alert("Invalid credentials");
@@ -24,21 +28,17 @@ export default function Login() {
       return;
     }
 
-    // Step 2: Call parent’s onLogin to update App.jsx state
-    const res = onLogin({
-      email: data.email,
-      password: data.password,
-      role: data.role || "farmer",
-      name: data.name,
-      phone: data.phone,
-    });
+    onLogin({
+  email: data.email,
+  password: data.password,
+  role: data.role || "farmer",
+  name: data.name,
+  phone: data.phone,
+});
 
-    if (res.ok) {
-      alert("Login successful!");
-      nav("/Dashboard"); // ✅ now Dashboard will render
-    } else {
-      alert(res.message || "Login failed");
-    }
+alert("Login successful!");
+nav("/Dashboard");
+
     // alert("Login successful!");
     // nav("/Dashboard"); // redirect after successful login
   };

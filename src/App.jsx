@@ -11,7 +11,7 @@ import Cart from "./pages/Cart";
 import HelpCenter from "./pages/HelpCenter";
 import Custsignup from "./pages/Custsignup";
 import Custlogin from "./pages/Custlogin";
-import Dashfarm from "./pages/Dashfarm";
+// import Dashfarm from "./pages/Dashfarm";
 import Forgotcust from "./pages/forgotcust";
 import Forgotfarm from "./pages/forgotfarm";
 import About from "./pages/About";
@@ -90,9 +90,9 @@ const [customers, setCustomers] = useState([]);
   }
 
 
-  // Signup
+  //  FARMER    Signup---------------------------------------------->
  function handleSignup(newUser) {
-  if (newUser.role === "farmer") {            //**************change2*************
+  if (newUser.role === "farmer") {           
     const duplicate = farmers.find(
       (u) =>
         u.phone === newUser.phone ||
@@ -124,26 +124,59 @@ const [customers, setCustomers] = useState([]);
 
 
 
-  // Login
-  function handleLogin({ email, password, role}) {              
-  let userList = [];
+  //  FARMER Login--------------------------------------------------------->
+  function handleLogin(user) {              
+  // let userList = [];
 
-  if (role === "farmer") userList = [...farmers, ...predefinedUsers.filter(u => u.role === "farmer")];
-  else if (role === "customer") userList = [...customers, ...predefinedUsers.filter(u => u.role === "customer")];
+  // if (role === "farmer") userList = [...farmers, ...predefinedUsers.filter(u => u.role === "farmer")];
+  // else if (role === "customer") userList = [...customers, ...predefinedUsers.filter(u => u.role === "customer")];
 
-  const u = userList.find(
-    (x) =>
-      (x.email === email || x.phone === email) && x.password === password
-  );
+  // const u = userList.find(
+  //   (x) =>
+  //     (x.email === email || x.phone === email) && x.password === password
+  // );
 
-  if (!u) return { ok: false, message: "Invalid credentials" };
-  setCurrentUser(u);
+  // if (!u) return { ok: false, message: "Invalid credentials" };
+  setCurrentUser(user);
 
   
-  return { ok: true, user: u };
+  return { ok: true, user};
 
 }
 
+
+
+// ===============================================================
+// 🧩 CUSTOMER SIGNUP
+function handleCustomerSignup(user) {
+  // const duplicate = customers.find(
+  //   (u) => u.phone === newCustomer.phone || (newCustomer.email && u.email === newCustomer.email)
+  // );
+
+  // if (duplicate) {
+  //   return { ok: false, message: "Customer with this phone or email already exists" };
+  // }
+
+  // setCustomers((prev) => [...prev, newCustomer]);
+    if (user.role === "customer") setCustomers((prev) => [...prev, user]);
+  return { ok: true };
+}
+
+// 🧩 CUSTOMER LOGIN
+function handleCustomerLogin(user) {
+  console.log("handleCustomerLogin called with:", user);
+
+  if (!user) {
+    console.error("No user received!");
+    return { ok: false, message: "Invalid login" };
+  }
+
+  setCurrentUser(user); // ✅ set user directly
+  console.log("Current user set:", user);
+  return { ok: true, user };
+}
+
+// =========================================================
 
 
   // Logout
@@ -177,43 +210,35 @@ const [customers, setCustomers] = useState([]);
 
 
 
+
+
+
   return (
-
-
-
-    
-    
+ 
     <BrowserRouter>
       <Navbar user={currentUser} onLogout={handleLogout} cartCount={cart.length} />
       <div className="page">
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/Signup" element={<Signup onSignup={handleSignup} />} />
-          <Route path="/Login" element={ <Login onLogin={handleLogin} />} />
-          <Route path="/Custsignup" element={<Custsignup onSignup={handleSignup} />} />
 
-          <Route path="/Custlogin" element={<Custlogin onLogin={handleLogin} />} />
+          <Route path="/Signup" element={<Signup onSignup={handleSignup} />} />
+
+          <Route path="/Login" element={ <Login onLogin={handleLogin} />} />
+
+          <Route path="/Custsignup" element={<Custsignup onSignup={handleCustomerSignup} />} />
+
+
+          <Route path="/Custlogin" element={<Custlogin onLogin={handleCustomerLogin} />}/>
 
           <Route path="/forgotcust" element={<Forgotcust />} />
           <Route path="/forgotfarm" element={<Forgotfarm />} />
            <Route path="/About" element={<About />} />
 
 
-           {<Route
-            path="/Dashfarm"
-            element={
-              currentUser && currentUser.role === "farmer" ? (
-                <Dashfarm crops={crops} user={currentUser} />
-              ) : (
-                <Navigate to="/Login" />
-              )
-            }
-          /> } 
 
-
-          {/* Dashboard */}
-          <Route
+          {/* { Dashboard */}
+          {/* { <Route
             path="/Dashboard"
             element={
               currentUser ? (
@@ -225,11 +250,49 @@ const [customers, setCustomers] = useState([]);
                   onRemoveCrop={handleRemoveCrop}
                 />
               ) : (
-                <Navigate to="/Login" />
+                <Navigate to="/" />
               )
             }
-          />
-
+          /> }
+         
+ */}
+<Route
+  path="/Dashboard"
+  element={
+    currentUser ? (
+      currentUser.role === "customer" ? (
+        (() => {
+          console.log("Rendering Customer Dashboard", currentUser);
+          return (
+            <Dashboard
+              crops={crops}
+              user={currentUser}
+              cart={cart}
+              onAddToCart={handleAddToCart}
+            />
+          );
+        })()
+      ) : currentUser.role === "farmer" ? (
+        (() => {
+          console.log("Rendering Farmer Dashboard", currentUser);
+          return (
+            <Dashboard
+              crops={crops}
+              user={currentUser}
+              cart={cart}
+              onAddToCart={handleAddToCart}
+              onRemoveCrop={handleRemoveCrop}
+            />
+          );
+        })()
+      ) : (
+        <Navigate to="/" />
+      )
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
 
 
 
@@ -241,7 +304,7 @@ const [customers, setCustomers] = useState([]);
               currentUser && currentUser.role === "farmer" ? (
                 <Sell user={currentUser} onAddCrop={handleAddCrop} />
               ) : (
-                <Navigate to="/login" />
+                <Navigate to="/Login" />
               )
             }
           />
@@ -257,7 +320,7 @@ const [customers, setCustomers] = useState([]);
                 user={currentUser}
                 onRemoveFromCart={handleRemoveFromCart}/>
               ) : (
-                <Navigate to="/login" />
+                <Navigate to="/" />
               )
             }
           />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 // import "./Signup.css"; // same CSS file as Farmer Signup for consistency
+import { supabase } from "../supabaseClient";
 
 export default function CustomerSignup({ onSignup }) {
   const [form, setForm] = useState({
@@ -31,7 +32,7 @@ export default function CustomerSignup({ onSignup }) {
   };
 
   // Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -52,18 +53,92 @@ export default function CustomerSignup({ onSignup }) {
       alert("Passwords do not match");
       return;
     }
+    let photoUrl = null;
 
-      const customerData = { ...form, role: "customer" };
+  // Upload profile photo if exists
+  if (form.profilePhoto) {
+        console.log("Uploading photo:", form.profilePhoto.name);
 
-    const res = onSignup(customerData);
+  const fileExt = form.profilePhoto.name.split(".").pop();
+  const fileName = `${Date.now()}.${fileExt}`;
+  const filePath = `profiles/${fileName}`;
 
-    if (res.ok) {
-      alert("Signup successful!");
+    const { data: storageData, error: storageError } = await supabase.storage
+      .from("farmimg")
+      .upload(filePath, form.profilePhoto,{
+        cacheControl:"3600",
+        upsert:false
+  });
+
+    if (storageError) {
+      console.error("Photo upload failed:", storageError.message);
+      alert("Photo upload failed. Please check your Supabase bucket name or permissions.");
     } else {
-      alert(res.message || "Signup failed");
-    }
-  };
+      console.log("✅ Photo uploaded:", storageData);
 
+      const { data: publicData } = supabase.storage
+        .from("farmimg")
+        .getPublicUrl(storageData.path);
+
+      photoUrl = publicData.publicUrl;
+       console.log("✅ Public URL:", photoUrl);
+    }
+
+
+  }
+
+  
+else {
+    console.log("⚠️ No profile photo selected");
+  }
+
+
+   const { data, error } = await supabase
+    .from("customerinfo")
+    .insert([
+      {
+        name: form.name,
+        phone: form.phone,
+        email: form.email.trim().toLowerCase(),
+        address: form.address,
+        city: form.city,
+        state: form.state,
+        pincode: form.pincode,
+        password: form.password, // ⚠️ store securely in production
+        role: "customer",
+        newsletter: form.newsletter,
+        profile_photo: photoUrl,
+      },
+    ])
+    .select() // return inserted data
+    .single();
+
+  if (error) {
+    console.error("❌ Signup failed:", error);
+    alert(`Signup failed: ${error.message}`);
+    console.error(error);
+  } else {
+     console.log("✅ Signup successful:", data);
+    alert("Signup successful!");
+    onSignup(data); // Update App.jsx state
+  }
+    //   const customerData = { ...form, role: "customer" };
+
+    // const res = onSignup(customerData);
+
+    // if (res.ok) {
+    //   alert("Signup successful!");
+    // } else {
+    //   alert(res.message || "Signup failed");
+    // }
+  };
+async function testBucket() {
+  const { data, error } = await supabase.storage.listBuckets();
+  console.log("Available buckets:", data);
+  if (error) console.error("Error listing buckets:", error.message);
+}
+
+testBucket();
   return (
     <div className="container">
       <h2>Customer Signup</h2>
