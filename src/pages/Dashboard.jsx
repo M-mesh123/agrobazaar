@@ -1,18 +1,40 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 import "../App.css";       
 
-export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemoveCrop }) {
+export default function Dashboard({  user, cart = [], onAddToCart, onRemoveCrop }) {
+    const [crops, setCrops] = useState([]);  //CHANGE 1---------------------------------->
   const [orders, setOrders] = useState([]); // orders can be used later if needed
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSellSidebarOpen, setIsSellSidebarOpen] = useState(false);
   const [isRemoveMode, setIsRemoveMode] = useState(false);
+  const [loading, setLoading] = useState(true);  //CHANGE 2----------------------------->
   const nav = useNavigate();
 
   // Removed Supabase logic completely (no fetchOrders or useEffect)
 
+//CHANGE 3----------------------------------------------------------->
+  useEffect(() => {
+    async function fetchCrops() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("crop_details")
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (error) console.error("❌ Error fetching crops:", error.message);
+      else setCrops(data || []);
+      setLoading(false);
+    }
+
+    fetchCrops();
+  }, []);
+
+
+//-------------------------------------------------------------------------->
   function handleAdd() {
     if (!selectedCrop || quantity < 1) return;
     onAddToCart(selectedCrop, quantity);
@@ -35,18 +57,14 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
     }
   }
 
-  // Example: Dashboard.jsx
-
-
-// async function fetchCrops() {
-//   const { data, error } = await supabase.from("crops").select("*");
-//   if (error) console.error(error);
-//   else console.log("Fetched crops:", data);
-// }
+ 
 
   const isFarmer = user?.role === "farmer";
   const isCustomer = user?.role === "customer";
 
+
+
+  if (loading) return <p>Loading crops...</p>;  //CHANGE 4----------------------------------->
   return (
     <div className="container">
       <div className="dashboard-header">
@@ -60,7 +78,10 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
 
       {/* Crop Grid */}
       <div className="grid">
-        {crops?.map((c) => (
+        {crops.length === 0 ? (
+          <p>No crops available right now.</p>
+        ):(
+        crops.map((c) => (
           <div className={`card ${isRemoveMode ? "shake" : ""}`} key={c.id}>
             {/* Cross icon for remove mode */}
             {isRemoveMode && (
@@ -74,9 +95,17 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
 
             <div className="card-image">
               <img
-                src={c.image ||c.imageData || "https://via.placeholder.com/300x180?text=No+Image"}
+                src={
+                  c.image_url ||
+                  c.image ||
+                  c.imageData ||
+                   "https://via.placeholder.com/300x180?text=No+Image"
+                  }
                 alt={c.name}
               />
+
+
+
 
               {/* Hover Description Overlay */}
               {c.description && (
@@ -101,7 +130,9 @@ export default function Dashboard({ crops, user, cart = [], onAddToCart, onRemov
               </button>
             </div>
           </div>
-        ))}
+
+              ))
+        )}
       </div>
 
       {/* Sidebar Cart */}
