@@ -1,33 +1,74 @@
 import React, { useState } from "react";
+import { supabase } from "../supabaseClient";
 
-export default function Sell({ onAddCrop, user }) {
+export default function Sell({ user }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-   const [description, setDescription] = useState("");
-  const [imageData, setImageData] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleImageUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setImageData(reader.result);
-    reader.readAsDataURL(file);
-  }
+  const handleImageUpload = (e) => {
+    setImageFile(e.target.files[0]);
+  };
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !price) {
-      alert("Please enter crop name and price");
+
+    if (!name || !price || !imageFile) {
+      alert("Please fill all fields and upload an image.");
       return;
     }
-    onAddCrop({ name, price,description,imageData });
-    setName("");
-    setPrice("");
-    setDescription("");
-    setImageData("");
-  }
 
-  // Optional safety, but route ensures user is farmer
+    try {
+      setLoading(true);
+
+      // ✅ 1. Upload image to Supabase Storage bucket 'crops/cropimg/'
+      const fileName = `${Date.now()}_${imageFile.name}`;
+      const filePath = `cropimg/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("crops")
+        .upload(filePath, imageFile);
+
+      if (uploadError) throw uploadError;
+
+      // ✅ 2. Get public image URL
+      const { data: publicUrlData } = supabase.storage
+        .from("crops")
+        .getPublicUrl(filePath);
+      const imageUrl = publicUrlData.publicUrl;
+
+      // ✅ 3. Insert crop details into 'crop_details' table
+      const { data, error: insertError } = await supabase
+        .from("crop_details")
+        .insert([
+          {
+            name,
+            price,
+            description,
+            image_url: imageUrl,
+            // temporarily skip farmer_id since your user is local
+          },
+        ])
+        .select();
+
+      if (insertError) throw insertError;
+
+      console.log("✅ Crop inserted:", data);
+      alert("✅ Crop added successfully!");
+      setName("");
+      setPrice("");
+      setDescription("");
+      setImageFile(null);
+    } catch (error) {
+      console.error("❌ Error uploading crop:", error.message);
+      alert("Failed to add crop: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (user.role !== "farmer") {
     return (
       <div className="container">
@@ -53,7 +94,6 @@ export default function Sell({ onAddCrop, user }) {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-
         <textarea
           placeholder="Enter crop description (e.g. type, quality, location, etc.)"
           value={description}
@@ -68,13 +108,10 @@ export default function Sell({ onAddCrop, user }) {
             fontSize: "16px",
             resize: "none",
           }}
-        ></textarea>
-
-
-        
+        />
         <input type="file" accept="image/*" onChange={handleImageUpload} />
-        <button type="submit" className="btn">
-          Add Crop
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? "Uploading..." : "Add Crop"}
         </button>
       </form>
     </div>

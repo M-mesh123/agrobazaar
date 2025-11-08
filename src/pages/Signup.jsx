@@ -27,14 +27,14 @@ export default function Signup() {
     let photoUrl = null;
     if (profilePhoto) {
       const { data, error } = await supabase.storage
-        .from("farmer-photos") // make sure the bucket exists in Supabase
-        .upload(`profiles/${Date.now()}_${profilePhoto.name}`, profilePhoto);
+        .from("profile_imgs") // make sure the bucket exists in Supabase
+        .upload(`farmer/${Date.now()}_${profilePhoto.name}`, profilePhoto);
 
       if (error) {
         console.error("Photo upload failed:", error.message);
       } else {
         const { data: publicURL } = supabase.storage
-          .from("farmer-photos")
+          .from("profile_imgs")
           .getPublicUrl(data.path);
         photoUrl = publicURL.publicUrl;
       }
@@ -68,12 +68,27 @@ export default function Signup() {
       <h2>Farmer Signup</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="tel" placeholder="Phone" maxlenght={10} value={phone} onChange={(e) => setPhone(e.target.value)} required />
+
+
+        <input type="tel" placeholder="Phone"    pattern="[0-9]{10}"
+          maxLength="10" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+
+
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+
         <textarea placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
+
+
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+
         <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+
+
         <input type="file" accept="image/*" onChange={(e) => setProfilePhoto(e.target.files[0])} />
+
+
         <button type="submit" className="btn">Signup</button>
       </form>
     </div>

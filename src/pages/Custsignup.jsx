@@ -61,13 +61,13 @@ export default function CustomerSignup({ onSignup }) {
 
   const fileExt = form.profilePhoto.name.split(".").pop();
   const fileName = `${Date.now()}.${fileExt}`;
-  const filePath = `profiles/${fileName}`;
+  const filePath = `customer/${fileName}`;
 
     const { data: storageData, error: storageError } = await supabase.storage
-      .from("farmimg")
+      .from("profile_imgs")
       .upload(filePath, form.profilePhoto,{
         cacheControl:"3600",
-        upsert:false
+        upsert:false,
   });
 
     if (storageError) {
@@ -77,7 +77,7 @@ export default function CustomerSignup({ onSignup }) {
       console.log("✅ Photo uploaded:", storageData);
 
       const { data: publicData } = supabase.storage
-        .from("farmimg")
+        .from("profile_imgs")
         .getPublicUrl(storageData.path);
 
       photoUrl = publicData.publicUrl;
@@ -122,15 +122,7 @@ else {
     alert("Signup successful!");
     onSignup(data); // Update App.jsx state
   }
-    //   const customerData = { ...form, role: "customer" };
-
-    // const res = onSignup(customerData);
-
-    // if (res.ok) {
-    //   alert("Signup successful!");
-    // } else {
-    //   alert(res.message || "Signup failed");
-    // }
+    
   };
 async function testBucket() {
   const { data, error } = await supabase.storage.listBuckets();
