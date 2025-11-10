@@ -22,14 +22,14 @@ import Footer from "./pages/footer";
 
 
 export default function App() {
-  // const nav =useNavigate();
+
   // Predefined users
   const predefinedUsers = [
     { name: "Buyer", age: 25, email: "buyer@test.com", password: "1234", role: "customer" },
     { name: "Seller", age: 30, email: "seller@test.com", password: "1234", role: "farmer" },
   ];
 
-// const nav =useNavigate();
+
   // Predefined crops
   const predefinedCrops = [
     {
@@ -54,9 +54,9 @@ export default function App() {
       image: "https://images.unsplash.com/photo-1608254896369-4bd1fa7d2d56?auto=format&fit=crop&w=800&q=60",
     },
   ];
-// Separate storage for each user type
-const [farmers, setFarmers] = useState([]);            
-const [customers, setCustomers] = useState([]);
+  // Separate storage for each user type
+  const [farmers, setFarmers] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
 
 
@@ -66,13 +66,13 @@ const [customers, setCustomers] = useState([]);
   const [tempUsers, setTempUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
 
-    
 
-  // const [crops, setCrops] = useState(predefinedCrops);
+
+  // const [crops
   const [cart, setCart] = useState([]);
 
   const allUsers = [...users, ...tempUsers];
-  
+
 
 
   const [crops, setCrops] = useState([
@@ -91,92 +91,72 @@ const [customers, setCustomers] = useState([]);
 
 
   //  FARMER    Signup---------------------------------------------->
- function handleSignup(newUser) {
-  if (newUser.role === "farmer") {           
-    const duplicate = farmers.find(
-      (u) =>
-        u.phone === newUser.phone ||
-        (newUser.email && u.email === newUser.email)
-    );
-    if (duplicate) {
-      return { ok: false, message: "Farmer with this phone or email already exists" };
+  function handleSignup(newUser) {
+    if (newUser.role === "farmer") {
+      const duplicate = farmers.find(
+        (u) =>
+          u.phone === newUser.phone ||
+          (newUser.email && u.email === newUser.email)
+      );
+      if (duplicate) {
+        return { ok: false, message: "Farmer with this phone or email already exists" };
+      }
+      setFarmers((prev) => [...prev, newUser]);
+      return { ok: true };
     }
-    setFarmers((prev) => [...prev, newUser]);
-    return { ok: true };
-  }
 
-  if (newUser.role === "customer") {
-    const duplicate = customers.find(
-      (u) =>
-        u.phone === newUser.phone ||
-        (newUser.email && u.email === newUser.email)
-    );
-    if (duplicate) {
-      return { ok: false, message: "Customer with this phone or email already exists" };
+    if (newUser.role === "customer") {
+      const duplicate = customers.find(
+        (u) =>
+          u.phone === newUser.phone ||
+          (newUser.email && u.email === newUser.email)
+      );
+      if (duplicate) {
+        return { ok: false, message: "Customer with this phone or email already exists" };
+      }
+      setCustomers((prev) => [...prev, newUser]);
+      return { ok: true };
     }
-    setCustomers((prev) => [...prev, newUser]);
-    return { ok: true };
-  }
 
-  return { ok: false, message: "Invalid role" };
-}
+    return { ok: false, message: "Invalid role" };
+  }
 
 
 
 
   //  FARMER Login--------------------------------------------------------->
-  function handleLogin(user) {              
-  // let userList = [];
+  function handleLogin(user) {
+    setCurrentUser(user);
+    return { ok: true, user };
 
-  // if (role === "farmer") userList = [...farmers, ...predefinedUsers.filter(u => u.role === "farmer")];
-  // else if (role === "customer") userList = [...customers, ...predefinedUsers.filter(u => u.role === "customer")];
-
-  // const u = userList.find(
-  //   (x) =>
-  //     (x.email === email || x.phone === email) && x.password === password
-  // );
-
-  // if (!u) return { ok: false, message: "Invalid credentials" };
-  setCurrentUser(user);
-
-  
-  return { ok: true, user};
-
-}
-
-
-
-// ===============================================================
-// 🧩 CUSTOMER SIGNUP
-function handleCustomerSignup(user) {
-  // const duplicate = customers.find(
-  //   (u) => u.phone === newCustomer.phone || (newCustomer.email && u.email === newCustomer.email)
-  // );
-
-  // if (duplicate) {
-  //   return { ok: false, message: "Customer with this phone or email already exists" };
-  // }
-
-  // setCustomers((prev) => [...prev, newCustomer]);
-    if (user.role === "customer") setCustomers((prev) => [...prev, user]);
-  return { ok: true };
-}
-
-// 🧩 CUSTOMER LOGIN
-function handleCustomerLogin(user) {
-  console.log("handleCustomerLogin called with:", user);
-
-  if (!user) {
-    console.error("No user received!");
-    return { ok: false, message: "Invalid login" };
   }
 
-  setCurrentUser(user); // ✅ set user directly
-  console.log("Current user set:", user);
-  return { ok: true, user };
-}
 
-// =========================================================
+
+  // 
+  // 🧩 CUSTOMER SIGNUP
+  function handleCustomerSignup(user) {
+
+    if (user.role === "customer") setCustomers((prev) => [...prev, user]);
+    return { ok: true };
+  }
+
+
+  // 🧩 CUSTOMER LOGIN
+  function handleCustomerLogin(user) {
+    console.log("handleCustomerLogin called with:", user);
+
+    if (!user) {
+      console.error("No user received!");
+      return { ok: false, message: "Invalid login" };
+    }
+
+    setCurrentUser(user); // ✅ set user directly
+    console.log("Current user set:", user);
+    return { ok: true, user };
+  }
+
+
 
 
   // Logout
@@ -203,10 +183,10 @@ function handleCustomerLogin(user) {
 
 
   function handleRemoveFromCart(itemToRemove) {
-  setCart((prevCart) =>
-    prevCart.filter((item) => item.name !== itemToRemove.name)
-  );
-}
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.name !== itemToRemove.name)
+    );
+  }
 
 
 
@@ -214,7 +194,7 @@ function handleCustomerLogin(user) {
 
 
   return (
- 
+
     <BrowserRouter>
       <Navbar user={currentUser} onLogout={handleLogout} cartCount={cart.length} />
       <div className="page">
@@ -224,75 +204,58 @@ function handleCustomerLogin(user) {
 
           <Route path="/Signup" element={<Signup onSignup={handleSignup} />} />
 
-          <Route path="/Login" element={ <Login onLogin={handleLogin} />} />
+          <Route path="/Login" element={<Login onLogin={handleLogin} />} />
 
           <Route path="/Custsignup" element={<Custsignup onSignup={handleCustomerSignup} />} />
 
 
-          <Route path="/Custlogin" element={<Custlogin onLogin={handleCustomerLogin} />}/>
+          <Route path="/Custlogin" element={<Custlogin onLogin={handleCustomerLogin} />} />
 
           <Route path="/forgotcust" element={<Forgotcust />} />
           <Route path="/forgotfarm" element={<Forgotfarm />} />
-           <Route path="/About" element={<About />} />
+          <Route path="/About" element={<About />} />
 
 
 
-          {/* { Dashboard */}
-          {/* { <Route
+
+
+          <Route
             path="/Dashboard"
             element={
               currentUser ? (
-                <Dashboard
-                  crops={crops}
-                  user={currentUser}
-                  cart={cart}
-                  onAddToCart={handleAddToCart}
-                  onRemoveCrop={handleRemoveCrop}
-                />
+                currentUser.role === "customer" ? (
+                  (() => {
+                    console.log("Rendering Customer Dashboard", currentUser);
+                    return (
+                      <Dashboard
+                        crops={crops}
+                        user={currentUser}
+                        cart={cart}
+                        onAddToCart={handleAddToCart}
+                      />
+                    );
+                  })()
+                ) : currentUser.role === "farmer" ? (
+                  (() => {
+                    console.log("Rendering Farmer Dashboard", currentUser);
+                    return (
+                      <Dashboard
+                        crops={crops}
+                        user={currentUser}
+                        cart={cart}
+                        onAddToCart={handleAddToCart}
+                        onRemoveCrop={handleRemoveCrop}
+                      />
+                    );
+                  })()
+                ) : (
+                  <Navigate to="/" />
+                )
               ) : (
                 <Navigate to="/" />
               )
             }
-          /> }
-         
- */}
-<Route
-  path="/Dashboard"
-  element={
-    currentUser ? (
-      currentUser.role === "customer" ? (
-        (() => {
-          console.log("Rendering Customer Dashboard", currentUser);
-          return (
-            <Dashboard
-              crops={crops}
-              user={currentUser}
-              cart={cart}
-              onAddToCart={handleAddToCart}
-            />
-          );
-        })()
-      ) : currentUser.role === "farmer" ? (
-        (() => {
-          console.log("Rendering Farmer Dashboard", currentUser);
-          return (
-            <Dashboard
-              crops={crops}
-              user={currentUser}
-              cart={cart}
-              onAddToCart={handleAddToCart}
-              onRemoveCrop={handleRemoveCrop}
-            />
-          );
-        })()
-      ) : (
-        <Navigate to="/" />
-      )
-    ) : (
-      <Navigate to="/" />
-    )
-  }
-/>
+          />
 
 
 
@@ -316,9 +279,9 @@ function handleCustomerLogin(user) {
             path="/cart"
             element={
               currentUser ? (
-                <Cart cart={cart} 
-                user={currentUser}
-                onRemoveFromCart={handleRemoveFromCart}/>
+                <Cart cart={cart}
+                  user={currentUser}
+                  onRemoveFromCart={handleRemoveFromCart} />
               ) : (
                 <Navigate to="/" />
               )
@@ -332,15 +295,7 @@ function handleCustomerLogin(user) {
           <Route path="/help" element={<HelpCenter />} />
         </Routes>
       </div>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   );
-
-
-
-
-
-
-
 }
-

@@ -8,23 +8,6 @@ export default function CustomerLogin({ onLogin }) {
   const [password, setPassword] = useState("");
   const nav = useNavigate();
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const res = onLogin({ email, password,role:"customer" });
-
-  //   if (!res.ok) {
-  //     alert(res.message || "Invalid login credentials");
-  //     return;
-  //   }
-
-  //   if (res.user.role !== "customer") {
-  //     alert("Access denied! Please login as a customer.");
-  //     return;
-  //   }
-
-  //   alert("Login successful!");
-  //   nav("/Dashboard");
-  // };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
