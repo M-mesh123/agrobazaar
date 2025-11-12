@@ -1,0 +1,203 @@
+{
+  "welcome": "Welcome to AgroBazaar",
+  "subtitle": "Buy and Sell Fresh Crops Directly From Farmers",
+  "farmer": "Farmer",
+  "customer": "Customer",
+  "popupTitle": "Welcome to AgroBazaar",
+  "popupSubtitle": "Please choose an option below:",
+  "customerLogin": "Customer Login",
+  "customerSignup": "Customer Signup",
+  "farmerLogin": "Farmer Login",
+  "farmerSignup": "Farmer Signup",
+
+  
+  "footer": {
+    "contactInfo": "Contact Information",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "aboutUs": "About Us",
+    "pesticideInfo": "Pesticide Information",
+    "marketPrice": "Market Price",
+    "helpCenter": "Help Center",
+    "rights": "All rights reserved"
+  },
+
+
+  "farmerSignupPage": {
+  "title": "Farmer Signup",
+  "fullName": "Full Name",
+  "phone": "Phone",
+  "email": "Email",
+  "address": "Address",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "profilePhoto": "Profile Photo",
+  "signupButton": "Signup",
+  "fillAllFields": "Please fill all fields",
+  "passwordMismatch": "Passwords do not match",
+  "signupSuccess": "Signup successful!",
+  "signupFailed": "Signup failed"
+},
+
+"farmerLoginPage": {
+  "title": "Farmer Login",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "Forgot Password?",
+  "loginButton": "Login",
+  "invalidCredentials": "Invalid credentials",
+  "loginSuccess": "Login successful!"
+},
+"customerSignupPage": {
+  "title": "Customer Signup",
+  "fullName": "Full Name",
+  "phone": "Phone Number",
+  "email": "Email Address",
+  "address": "Full Address",
+  "city": "City",
+  "state": "State",
+  "pincode": "Pincode",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "profilePhoto": "Upload Profile Photo (optional)",
+  "signupButton": "Signup",
+  "fillAllFields": "Please fill all required fields",
+  "passwordMismatch": "Passwords do not match",
+  "signupSuccess": "Signup successful!",
+  "signupFailed": "Signup failed"
+},
+"customerLoginPage": {
+  "title": "Customer Login",
+  "emailOrPhone": "Email / Phone",
+  "password": "Password",
+  "placeholderEmailPhone": "Enter your email or phone",
+  "placeholderPassword": "Enter your password",
+  "loginButton": "Login",
+  "signupText": "Don’t have an account?",
+  "signupLink": "Sign Up",
+  "forgotPassword": "Forgot Password?",
+  "invalidCredentials": "Invalid credentials",
+  "loginSuccess": "Login successful!"
+},
+"dashboardPage": {
+  "title": "Dashboard",
+  "welcomeFarmer": "Welcome, Farmer {{name}}",
+  "welcomeCustomer": "Welcome, {{name}} 👋",
+  "loadingCrops": "Loading crops...",
+  "noCrops": "No crops available right now.",
+  "price": "Price",
+  "vendor": "Vendor",
+  "addToCart": "Add to Cart",
+  "yourCart": "Your Cart",
+  "noItemsInCart": "No items in cart",
+  "total": "Total",
+  "Sellcrops": "Sell Crops",
+  "farmerpanel":"Farmer panel",
+  "manageCrops": "Manage your crops and sales directly from here.",
+  "goToSell": "Go to Sell Page",
+  "removeCrops": "Remove Crops",
+  "exitRemoveMode": "Exit Remove Mode",
+  "customerOrders": "Customer Orders",
+  "noOrders": "No customer purchases yet.",
+  "customerName": "Customer Name",
+  "email": "Email",
+  "crop": "Crop",
+  "quantity": "Quantity (kg)",
+  "totalAmount": "Total (₹)",
+  "date": "Date",
+  "confirmRemove": "Are you sure you want to remove {{cropName}}?"
+},
+"cartPage": {
+  "title": "Your Cart 🛒",
+  "noItems": "No items in cart.",
+  "quantity": "Quantity",
+  "price": "Price",
+  "total": "Total",
+  "remove": "Remove ❌",
+  "totalAmount": "Total Amount",
+  "proceedPayment": "Proceed to Payment 💳",
+  "loginAlert": "Please login first",
+  "paymentSuccess": "Payment successful! Payment id: {{id}}"
+},
+
+
+"sell": {
+    "title": "Sell Your Crop",
+    "crop_name_placeholder": "Crop Name",
+    "price_placeholder": "Price per kg",
+    "description_placeholder": "Enter crop description (e.g. type, quality, location, etc.)",
+    "add_crop_button": "Add Crop",
+    "uploading": "Uploading...",
+    "alert_fill_all_fields": "Please fill all fields and upload an image.",
+    "success_message": "✅ Crop added successfully!",
+    "error_message": "Failed to add crop: ",
+    "access_denied_title": "Access Denied",
+    "access_denied_message": "Only farmers can add crops for selling."
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome_farmer": "Welcome, Farmer {{name}}",
+    "welcome_customer": "Welcome, {{name}} 👋",
+    "loading": "Loading crops...",
+    "no_crops": "No crops available right now.",
+    "price": "Price",
+    "vendor": "Vendor",
+    "add_to_cart": "Add to Cart",
+    "cart_title": "Your Cart",
+    "purchase_cart": "Your Purchase Cart",
+    "add_button": "Add",
+    "empty_cart": "No items in cart",
+    "total": "Total:",
+    "sell_crops": "Sell Crops",
+    "sell_title": "Sell Crops",
+    "sell_description": "Manage your crops and sales directly from here.",
+    "go_to_sell": "Go to Sell Page",
+    "remove_crops": "🗑 Remove Crops",
+    "exit_remove_mode": "❌ Exit Remove Mode",
+    "customer_orders": "Customer Orders",
+    "no_orders": "No customer purchases yet.",
+    "customer_name": "Customer Name",
+    "email": "Email",
+    "crop": "Crop",
+    "quantity": "Quantity (kg)",
+    "total_price": "Total (₹)",
+    "date": "Date",
+    "confirm_remove": "Are you sure you want to remove {{cropName}}?"
+  },
+
+  "cart": {
+    "title": "Your Cart",
+    "empty": "No items in cart.",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "remove": "Remove",
+    "total_amount": "Total Amount",
+    "proceed_payment": "Proceed to Payment",
+    "login_alert": "Please login first",
+    "payment_description": "Crop Purchase",
+    "payment_success": "Payment successful! Payment id: {{id}}"
+  },
+
+
+  
+  "navbar": {
+    "logo_alt": "AgroBazaar Logo",
+    "title": "AgroBazaar",
+    "home": "Home",
+    "login": "Login",
+    "signup": "Signup",
+    "dashboard": "Dashboard",
+    "cart": "Cart",
+    "hi": "Hi",
+    "logout": "Logout"
+  }
+
+
+
+
+}
+
+
